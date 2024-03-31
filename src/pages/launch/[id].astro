@@ -1,0 +1,25 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLaunchBy } from '../../services/spacex';
+
+export const prerender = false; // Esto se agrega/añade solo cuando en la configuración se establece el 'o utput' como 'hybrid'
+
+const { id } = Astro.params;
+let launch
+
+if (id) launch = await getLaunchBy({id})
+
+/* export async function getStaticPaths() {
+	// Esto solo es recomendable cuando es un número finito de páginas, un número de paginas conocidas antes de que el usuario ingrese, por ejemplo en un 'Tienda en línea'
+	const launches = await getLatestLaunches();
+	return launches.map((launch) => ({params: {id: launch.id}}));
+	// return [{params: {id: '5eb87cd9ffd86e000604b32a'}}];
+} */
+---
+<Layout title=`Launch ${id}`>
+	<article class="flex gap-y-4 flex-col">
+		<img class="w-52 h-auto" src={launch?.links.patch.small} alt={launch?.name}>
+		<h2 class="text-4xl text-white font-bold">Launch #{launch?.flight_number}</h2>
+		<p class="text-lg">{launch?.details}</p>
+	</article>
+</Layout>
